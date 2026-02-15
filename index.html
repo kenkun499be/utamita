@@ -122,7 +122,8 @@ h1 {
 
 .song {
   position: absolute;
-  transform-origin: center;
+  left: 0;
+  top: 0;
 }
 
 .song-inner {
@@ -339,13 +340,35 @@ songs.forEach(song => {
 /* 浮遊 */
 function animate() {
   items.forEach(obj => {
+
+    const w = obj.el.offsetWidth;
+    const h = obj.el.offsetHeight;
+
     obj.x += obj.vx;
     obj.y += obj.vy;
 
-    if (obj.x < 0 || obj.x > area.clientWidth - 120) obj.vx *= -1;
-    if (obj.y < 40 || obj.y > area.clientHeight - 40) obj.vy *= -1;
+    // 左右の壁
+    if (obj.x <= 0) {
+      obj.x = 0;
+      obj.vx *= -1;
+    }
+    if (obj.x >= area.clientWidth - w) {
+      obj.x = area.clientWidth - w;
+      obj.vx *= -1;
+    }
 
-    obj.el.style.transform = `translate(${obj.x}px, ${obj.y}px)`;
+    // 上下の壁
+    if (obj.y <= 40) {
+      obj.y = 40;
+      obj.vy *= -1;
+    }
+    if (obj.y >= area.clientHeight - h) {
+      obj.y = area.clientHeight - h;
+      obj.vy *= -1;
+    }
+
+    obj.el.style.left = obj.x + "px";
+    obj.el.style.top = obj.y + "px";
   });
 
   requestAnimationFrame(animate);
